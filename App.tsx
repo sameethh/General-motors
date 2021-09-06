@@ -22,7 +22,7 @@ const ListView = (commitList: any) => {
     <FlatList
       data={commitList}
       renderItem={renderItem}
-      keyExtractor={item => item.id}
+      keyExtractor={commitList => commitList?.author}
     />)
 }
 
@@ -55,8 +55,8 @@ const App = () => {
       const response = await fetch(`https://api.github.com/repos/${userName}/${repo}/commits`)
       const json = await response.json()
       let commitArray: { commitHash: string; author: string; message: string }[] = []
-      json.map((obj: any) => {
-        console.log(obj)
+      json.map((obj: any , index: number) => {
+        console.log(obj, index)
         commitArray.push({ commitHash: obj?.sha, author: obj?.commit?.author?.name, message: obj?.commit?.message })
       })
       setCommitList(commitArray)
@@ -68,7 +68,7 @@ const App = () => {
   useEffect(() => {
     TriggerGitAPI()
   }, [])
-  
+
   const backgroundStyle = {
     height: 80,
     backgroundColor: 'teal',
