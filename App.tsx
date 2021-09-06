@@ -22,7 +22,7 @@ const ListView = (commitList: any) => {
     <FlatList
       data={commitList}
       renderItem={renderItem}
-      keyExtractor={commitList => commitList?.author}
+      keyExtractor={commitList => commitList?.commitHash}
     />)
 }
 
@@ -33,9 +33,9 @@ const renderItem = ({ item }: any) => (
 
 const Item = ({ item }: any) => (
   <View style={styles.item}>
-    <Text style={styles.title}>author: {item.author}</Text>
-    <Text style={styles.commithash}>Commit# {item.commitHash}</Text>
-    <Text style={styles.commithash}>Message: {item.message}</Text>
+    <Text style={styles.title}>message: {item.message}</Text>
+    <Text style={styles.commithash}>commit# {item.commitHash}</Text>
+    <Text style={styles.commithash}>committer: {item.author}</Text>
   </View>
 );
 
@@ -49,14 +49,14 @@ const App = () => {
 
   const [commitList, setCommitList] = useState<any>([])
 
-
+  var commitHash = ''
   const TriggerGitAPI = async () => {
     try {
       const response = await fetch(`https://api.github.com/repos/${userName}/${repo}/commits`)
       const json = await response.json()
       let commitArray: { commitHash: string; author: string; message: string }[] = []
       json.map((obj: any , index: number) => {
-        console.log(obj, index)
+        commitHash = obj.sha
         commitArray.push({ commitHash: obj?.sha, author: obj?.commit?.author?.name, message: obj?.commit?.message })
       })
       setCommitList(commitArray)
@@ -67,7 +67,7 @@ const App = () => {
   }
   useEffect(() => {
     TriggerGitAPI()
-  }, [])
+  }, [commitHash])
 
   const backgroundStyle = {
     height: 80,
@@ -80,7 +80,9 @@ const App = () => {
           <Text style={styles.headerText}>Git Users Commits</Text>
         </View>
       </SafeAreaView>
+      <View>
       {ListView(commitList)}
+      </View>
     </View>
   );
 };
@@ -97,10 +99,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
-    backgroundColor: 'red',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    borderRadius:10,
+    borderWidth:1,
+    borderColor:'black',
+    backgroundColor: 'grey',
+    padding: 10,
+    marginVertical: 5,
+    marginHorizontal: 8,
   },
   title: {
     fontSize: 15,
