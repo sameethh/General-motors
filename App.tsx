@@ -8,30 +8,23 @@
  * @format
  */
 
-import React, { useEffect, useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  FlatList
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, Text, View, FlatList} from 'react-native';
 
 const ListView = (commitList: any) => {
   return (
     <FlatList
       data={commitList}
       renderItem={renderItem}
+      // eslint-disable-next-line no-shadow
       keyExtractor={commitList => commitList?.commitHash}
-    />)
-}
+    />
+  );
+};
 
+const renderItem = ({item}: any) => <Item item={item} />;
 
-const renderItem = ({ item }: any) => (
-  <Item item={item} />
-);
-
-const Item = ({ item }: any) => (
+const Item = ({item}: any) => (
   <View style={styles.item}>
     <Text style={styles.title}>message: {item.message}</Text>
     <Text style={styles.commithash}>commit# {item.commitHash}</Text>
@@ -39,35 +32,38 @@ const Item = ({ item }: any) => (
   </View>
 );
 
-
-const userName = 'sameethh'
-const repo = 'General-motors'
-
-
+const userName = 'sameethh';
+const repo = 'General-motors';
 
 const App = () => {
+  const [commitList, setCommitList] = useState<any>([]);
 
-  const [commitList, setCommitList] = useState<any>([])
-
-  var commitHash = ''
+  var commitHash = '';
   const TriggerGitAPI = async () => {
     try {
-      const response = await fetch(`https://api.github.com/repos/${userName}/${repo}/commits`)
-      const json = await response.json()
-      let commitArray: { commitHash: string; author: string; message: string }[] = []
-      json.map((obj: any , index: number) => {
-        commitHash = obj.sha
-        commitArray.push({ commitHash: obj?.sha, author: obj?.commit?.author?.name, message: obj?.commit?.message })
-      })
-      setCommitList(commitArray)
+      const response = await fetch(
+        `https://api.github.com/repos/${userName}/${repo}/commits`,
+      );
+      const json = await response.json();
+      let commitArray: {commitHash: string; author: string; message: string}[] =
+        [];
+      json.map((obj: any) => {
+        commitHash = obj.sha;
+        commitArray.push({
+          commitHash: obj?.sha,
+          author: obj?.commit?.author?.name,
+          message: obj?.commit?.message,
+        });
+      });
+      setCommitList(commitArray);
     } catch (error) {
       console.error(error);
     }
-
-  }
+  };
   useEffect(() => {
-    TriggerGitAPI()
-  }, [commitHash])
+    TriggerGitAPI();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commitHash]);
 
   const backgroundStyle = {
     height: 80,
@@ -80,9 +76,7 @@ const App = () => {
           <Text style={styles.headerText}>Git Users Commits</Text>
         </View>
       </SafeAreaView>
-      <View>
-      {ListView(commitList)}
-      </View>
+      <View>{ListView(commitList)}</View>
     </View>
   );
 };
@@ -90,18 +84,18 @@ const App = () => {
 const styles = StyleSheet.create({
   header: {
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headerText: {
-    fontSize: 20
+    fontSize: 20,
   },
   container: {
     flex: 1,
   },
   item: {
-    borderRadius:10,
-    borderWidth:1,
-    borderColor:'black',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'black',
     backgroundColor: 'grey',
     padding: 10,
     marginVertical: 5,
@@ -110,9 +104,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 15,
   },
-  commithash:{
+  commithash: {
     fontSize: 10,
-  }
+  },
 });
 
 export default App;
