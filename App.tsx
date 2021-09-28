@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /**
  * Sample React Native App
  * https://github.com/facebook/react-native
@@ -9,7 +10,14 @@
  */
 
 import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Text, View, FlatList} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TextInput,
+} from 'react-native';
 
 const ListView = (commitList: any) => {
   return (
@@ -22,9 +30,9 @@ const ListView = (commitList: any) => {
   );
 };
 
-const renderItem = ({item}: any) => <Item item={item} />;
+const renderItem = ({ item }: any) => <Item item={item} />;
 
-const Item = ({item}: any) => (
+const Item = ({ item }: any) => (
   <View style={styles.item}>
     <Text style={styles.title}>message: {item.message}</Text>
     <Text style={styles.commithash}>commit# {item.commitHash}</Text>
@@ -37,6 +45,12 @@ const repo = 'General-motors';
 
 const App = () => {
   const [commitList, setCommitList] = useState<any>([]);
+  const [input, setInput] = useState<string>('');
+  const filteredData = commitList.filter((item: any) => {
+    return item.message.toLowerCase().includes(input.toLocaleLowerCase());
+  });
+
+  console.log(filteredData);
 
   var commitHash = '';
   const TriggerGitAPI = async () => {
@@ -44,10 +58,10 @@ const App = () => {
       const response = await fetch(
         `https://api.github.com/repos/${userName}/${repo}/commits`,
       );
-      const json = await response.json();
+      const data = await response.json();
       let commitArray: {commitHash: string; author: string; message: string}[] =
         [];
-      json.map((obj: any) => {
+      data.map((obj: any) => {
         commitHash = obj.sha;
         commitArray.push({
           commitHash: obj?.sha,
@@ -76,7 +90,23 @@ const App = () => {
           <Text style={styles.headerText}>Git Users Commits</Text>
         </View>
       </SafeAreaView>
-      <View>{ListView(commitList)}</View>
+      <View
+        style={{
+          borderWidth: 1,
+          borderRadius: 15,
+          margin: 15,
+          alignItems: 'center',
+          padding: 10,
+        }}>
+        <TextInput
+          placeholder={'Search'}
+          clearTextOnFocus
+          onChangeText={text => {
+            setInput(text);
+          }}
+        />
+      </View>
+      <View>{ListView(filteredData)}</View>
     </View>
   );
 };
