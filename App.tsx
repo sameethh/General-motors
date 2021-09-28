@@ -82,25 +82,14 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [commitHash]);
 
-  const backgroundStyle = {
-    height: 80,
-    backgroundColor: 'teal',
-  };
   return (
     <View>
-      <SafeAreaView style={backgroundStyle}>
+      <SafeAreaView style={styles.backgroundStyle}>
         <View style={styles.header}>
           <Text style={styles.headerText}>Git Users Commits</Text>
         </View>
       </SafeAreaView>
-      <View
-        style={{
-          borderWidth: 1,
-          borderRadius: 15,
-          margin: 15,
-          alignItems: 'center',
-          padding: 10,
-        }}>
+      <View style={styles.textInput}>
         <TextInput
           placeholder={'Search'}
           clearTextOnFocus
@@ -139,6 +128,17 @@ const styles = StyleSheet.create({
   },
   commithash: {
     fontSize: 10,
+  },
+  textInput: {
+    borderWidth: 1,
+    borderRadius: 15,
+    margin: 15,
+    alignItems: 'center',
+    padding: 10,
+  },
+  backgroundStyle: {
+    height: 80,
+    backgroundColor: 'teal',
   },
 });
 
