@@ -50,8 +50,6 @@ const App = () => {
     return item.message.toLowerCase().includes(input.toLocaleLowerCase());
   });
 
-  console.log(filteredData);
-
   var commitHash = '';
   const TriggerGitAPI = async () => {
     try {
