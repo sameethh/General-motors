@@ -40,9 +40,32 @@ const renderItem = ({item}: {item: IcommitList}) => <Item item={item} />;
 
 const Item = ({item}: {item: IcommitList}) => (
   <View style={styles.item}>
-    <Text style={styles.title}>message: {item.message}</Text>
-    <Text style={styles.commithash}>commit# {item.commitHash}</Text>
-    <Text style={styles.commithash}>committer: {item.author}</Text>
+    <View
+      style={{
+        flex: 0.5,
+        borderBottomWidth: 1,
+        borderColor: 'white',
+        alignItems: 'flex-start',
+        padding: 5,
+        paddingLeft: 10,
+      }}>
+      <Text style={styles.title}>{item.message}</Text>
+    </View>
+    <View style={{flex: 0.5, flexDirection: 'row'}}>
+      <View
+        style={{
+          flex: 0.5,
+          borderRightWidth: 1,
+          borderColor: 'white',
+          alignItems: 'center',
+          padding: 5,
+        }}>
+        <Text style={styles.commithash}># {item.commitHash.slice(0, 7)}</Text>
+      </View>
+      <View style={{flex: 0.5, alignItems: 'center', padding: 5}}>
+        <Text style={styles.commithash}>author: {item.author}</Text>
+      </View>
+    </View>
   </View>
 );
 
@@ -98,7 +121,7 @@ const App = () => {
           }}
         />
       </View>
-      <View>{ListView(filteredData)}</View>
+      {ListView(filteredData)}
     </View>
   );
 };
@@ -115,19 +138,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   item: {
+    flex: 1,
     borderRadius: 10,
     borderWidth: 1,
     borderColor: 'black',
     backgroundColor: 'grey',
-    padding: 10,
     marginVertical: 5,
     marginHorizontal: 8,
   },
   title: {
     fontSize: 15,
+    fontWeight: 'bold',
   },
   commithash: {
     fontSize: 10,
+    fontWeight: 'bold',
   },
   textInput: {
     borderWidth: 1,
