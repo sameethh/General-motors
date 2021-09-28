@@ -19,7 +19,13 @@ import {
   TextInput,
 } from 'react-native';
 
-const ListView = (commitList: any) => {
+interface IcommitList {
+  commitHash: string;
+  author: string;
+  message: string;
+}
+
+const ListView = (commitList: IcommitList[]) => {
   return (
     <FlatList
       data={commitList}
@@ -30,9 +36,9 @@ const ListView = (commitList: any) => {
   );
 };
 
-const renderItem = ({ item }: any) => <Item item={item} />;
+const renderItem = ({item}: {item: IcommitList}) => <Item item={item} />;
 
-const Item = ({ item }: any) => (
+const Item = ({item}: {item: IcommitList}) => (
   <View style={styles.item}>
     <Text style={styles.title}>message: {item.message}</Text>
     <Text style={styles.commithash}>commit# {item.commitHash}</Text>
@@ -44,9 +50,9 @@ const userName = 'sameethh';
 const repo = 'General-motors';
 
 const App = () => {
-  const [commitList, setCommitList] = useState<any>([]);
+  const [commitList, setCommitList] = useState<IcommitList[]>([]);
   const [input, setInput] = useState<string>('');
-  const filteredData = commitList.filter((item: any) => {
+  const filteredData = commitList.filter((item: IcommitList) => {
     return item.message.toLowerCase().includes(input.toLocaleLowerCase());
   });
 
@@ -57,8 +63,7 @@ const App = () => {
         `https://api.github.com/repos/${userName}/${repo}/commits`,
       );
       const data = await response.json();
-      let commitArray: {commitHash: string; author: string; message: string}[] =
-        [];
+      let commitArray: IcommitList[] = [];
       data.map((obj: any) => {
         commitHash = obj.sha;
         commitArray.push({
